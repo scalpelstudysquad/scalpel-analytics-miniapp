@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scalpel Study Squad</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        /* Mathematical Centering for the entire screen */
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background: #0e1621; 
+            color: white; 
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .card { 
+            background: #17212b; 
+            border-radius: 20px; 
+            padding: 35px; 
+            border: 1px solid #2b5278; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6); 
+            width: 100%;
+            max-width: 340px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .logo { 
+            width: 110px; 
+            height: 110px; 
+            border-radius: 50%; 
+            border: 3px solid #5288c1; 
+            margin-bottom: 20px; 
+            object-fit: cover; 
+            display: block;
+        }
+
+        h1 { 
+            color: #5288c1; 
+            margin: 0 0 15px 0; 
+            font-size: 24px; 
+            font-weight: bold;
+        }
+
+        .btn { 
+            color: white; 
+            background: #2481cc;
+            border: none; 
+            padding: 18px; 
+            border-radius: 12px; 
+            font-weight: bold; 
+            font-size: 16px; 
+            cursor: pointer; 
+            width: 100%; 
+            transition: background 0.2s; 
+            margin-top: 10px; 
+            display: block; 
+            text-decoration: none; 
+            outline: none; 
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn:active { background: #1c66a0; }
+
+        .notice { 
+            background: rgba(82, 136, 193, 0.1); 
+            border-radius: 12px; 
+            padding: 15px; 
+            margin-top: 25px; 
+            font-size: 14px; 
+            color: #b1c3d5; 
+            line-height: 1.5; 
+            border-left: 4px solid #5288c1; 
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .footer { 
+            margin-top: 30px; 
+            color: #ef5350; 
+            font-size: 11px; 
+            font-weight: bold; 
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <img src="https://github.com/dhruvathaare/Scaslpel-Study-Squad-Apps/blob/main/photo_2026-02-12_20-08-36.jpg?raw=true" class="logo" alt="Scalpel Study Squad Logo">
+        
+        <h1>Scalpel Study Squad</h1>
+        
+        <button id="tgButton" class="btn">Generate Telegram Group Link</button>
+        
+        <div class="notice">
+            📢 <b>Note:</b> Shorty Smarty Revision group link will be posted in the Main Group every Saturday.
+        </div>
+        
+        <div class="footer">⚠️ LINK EXPIRES IN 2 MINUTES <br> FOR 1 PERSON ONLY</div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+
+        const botToken = "8026430979:AAFY3pQX0FkRxRL_xjihcFZWfrBZLVP-JG8";
+        const chatId = "-1002547958063";
+
+        document.getElementById('tgButton').onclick = async () => {
+            const expireDate = Math.floor(Date.now() / 1000) + 120;
+
+            try {
+                const response = await fetch(`https://api.telegram.org/bot${botToken}/createChatInviteLink`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        expire_date: expireDate,
+                        member_limit: 1
+                    })
+                });
+                const data = await response.json();
+                if (data.result && data.result.invite_link) {
+                    tg.openTelegramLink(data.result.invite_link);
+                    // Closes app shortly after opening the link
+                    setTimeout(() => { tg.close(); }, 5000); 
+                } else {
+                    tg.showAlert("Error: Please make sure the Bot is an Admin in the group.");
+                }
+            } catch (e) {
+                tg.showAlert("Connection error. Please try again.");
+            }
+        };
+    </script>
+</body>
+</html>
